@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <label>Range of bytes?</label>
+    <!-- Range is inclusive so 0-200 includes bytes 0 and 200 for a total of 201 bytes -->
+    <input id="numBytes" type="text" placeholder="0-200">
+    <button onclick="sendPartialRequest()">Send Partial Request</button>
+    <p id="returnedData"></p>
+    
+    
+    <script>
+
+        const byteInput = document.getElementById('numBytes');
+        const returnedData = document.getElementById('returnedData');
+
+        function sendPartialRequest() {
+
+            // Request to communicate with server
+            const xhr = new XMLHttpRequest();
+            // Send a GET request to url our server is listening on
+            xhr.open('GET', 'http://localhost:1234');
+            // We want the specified amount of bytes from the file
+            xhr.setRequestHeader('Range', `bytes=${byteInput.value}`);
+            // Send the request.
+            xhr.send();
+
+            // When the request has finished and if partial content was successful display the data
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 206) {
+                    returnedData.innerText = xhr.responseText;
+                }
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
